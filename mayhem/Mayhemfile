@@ -1,8 +1,8 @@
 project: GEOSwift
-target: fuzz-GEOSwift
+target: fuzz-geo-swift
 testsuite:
-	- file:://mayhem/testsuite
+    - file://mayhem/testsuite
 
 cmds:
-  - cmd: /src/mayhem/fuzz_GEOSwift.py
+  - cmd: /release/GEOFuzz
     libfuzzer: true

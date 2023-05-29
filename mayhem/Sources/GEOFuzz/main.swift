@@ -49,6 +49,18 @@ public func GEOFUzz(_ start: UnsafeRawPointer, _ count: Int) -> CInt {
                 }
             case 7:
                 try first_geo.polygonize()
+            case 8:
+                try first_geo.contains(second_geo ?? first_geo)
+            case 9:
+                try first_geo.isDisjoint(with: second_geo ?? first_geo)
+            case 10:
+                try first_geo.touches(second_geo ?? first_geo)
+            case 11:
+                try first_geo.crosses(second_geo ?? first_geo)
+            case 12:
+                try first_geo.overlaps(second_geo ?? first_geo)
+            case 13:
+                try first_geo.relate(second_geo ?? first_geo)
             default:
                 fatalError("Invalid fuzz choice")
             }

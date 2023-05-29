@@ -127,9 +127,11 @@ class FuzzedDataProvider {
     }
 
     func ConsumeRemainingString() -> String {
-        let result = String(data: data_src, encoding: .utf8)!
-        data_src.removeAll()
-        return result
+        if let result = String(data: data_src, encoding: .utf8) {
+            data_src.removeAll()
+            return result
+        }
+        return ""
     }
 
     func PickValueInList<T>(from list: T) -> T.Element where T: Collection {

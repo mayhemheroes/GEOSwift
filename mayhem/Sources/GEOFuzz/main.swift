@@ -14,7 +14,7 @@ import GEOSwift
 public func GEOFUzz(_ start: UnsafeRawPointer, _ count: Int) -> CInt {
     let fdp = FuzzedDataProvider(start, count)
 
-    let choice = fdp.ConsumeIntegralInRange(from: 0, to: 2)
+    let choice = fdp.ConsumeIntegralInRange(from: 0, to: 3)
 
     do {
         switch (choice) {
@@ -25,6 +25,35 @@ public func GEOFUzz(_ start: UnsafeRawPointer, _ count: Int) -> CInt {
         case 2:
             let decoder = JSONDecoder()
             try decoder.decode(GeoJSON.self, from: fdp.ConsumeRemainingData())
+        case 3:
+            let first_geo = try Geometry(wkt: fdp.ConsumeRandomLengthString())
+            let second_geo = try? Geometry(wkt: fdp.ConsumeRandomLengthString())
+
+            let operation = fdp.ConsumeIntegralInRange(from: 0, to: 7)
+            switch (operation) {
+            case 0:
+                try first_geo.buffer(by: fdp.ConsumeDouble())
+            case 1:
+                try first_geo.convexHull()
+            case 2:
+                try first_geo.intersection(with: second_geo ?? first_geo)
+            case 3:
+                try first_geo.minimumBoundingCircle()
+            case 4:
+                try first_geo.envelope()
+            case 5:
+                try first_geo.union(with: second_geo ?? first_geo)
+            case 6:
+                if let sg = second_geo {
+                    try first_geo.difference(with: second_geo ?? first_geo)
+                }
+            case 7:
+                try first_geo.polygonize()
+            default:
+                fatalError("Invalid fuzz choice")
+            }
+
+
         default:
             fatalError("Invalid fuzz choice")
         }

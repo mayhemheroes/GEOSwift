@@ -1,0 +1,8 @@
+project: GEOSwift
+target: fuzz-geo-swift
+testsuite:
+    - file://mayhem/testsuite
+
+cmds:
+  - cmd: /debug/GEOFuzz
+    libfuzzer: true
